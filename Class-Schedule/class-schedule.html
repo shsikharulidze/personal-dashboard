@@ -55,6 +55,45 @@
             font-size: 1.1rem;
         }
         
+        .countdown-display {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(76, 175, 80, 0.3);
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .countdown-display.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .countdown-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .countdown-time {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .countdown-class {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
         .urgent-alert {
             background: linear-gradient(135deg, #ff6b6b, #ff8e53);
             color: white;
@@ -267,6 +306,12 @@
             <div class="date-display" id="current-date">Loading...</div>
         </div>
         
+        <div id="countdown-container" class="countdown-display">
+            <div class="countdown-title">⏰ Next Class In</div>
+            <div class="countdown-time" id="countdown-time">--:--:--</div>
+            <div class="countdown-class" id="countdown-class">Loading...</div>
+        </div>
+        
         <div id="urgent-alerts"></div>
         
         <div class="schedule-grid">
@@ -395,6 +440,86 @@
             
             const timeDiff = classTime.getTime() - currentTime.getTime();
             return timeDiff > 0 && timeDiff <= 30 * 60 * 1000; // 30 minutes
+        }
+
+        function getNextClass() {
+            const now = new Date();
+            let nextClass = null;
+            let minTimeDiff = Infinity;
+
+            classes.forEach(classInfo => {
+                classInfo.days.forEach(day => {
+                    const dayIndex = daysOfWeek.indexOf(day);
+                    const classTime = parseTime(classInfo.startTime);
+                    
+                    // Create date for this class occurrence
+                    let classDate = new Date();
+                    classDate.setDate(classDate.getDate() + ((dayIndex - classDate.getDay() + 7) % 7));
+                    classDate.setHours(classTime.getHours());
+                    classDate.setMinutes(classTime.getMinutes());
+                    classDate.setSeconds(0);
+                    classDate.setMilliseconds(0);
+                    
+                    // If the class time today has passed, look at next week
+                    if (classDate <= now) {
+                        classDate.setDate(classDate.getDate() + 7);
+                    }
+                    
+                    const timeDiff = classDate.getTime() - now.getTime();
+                    
+                    if (timeDiff > 0 && timeDiff < minTimeDiff) {
+                        minTimeDiff = timeDiff;
+                        nextClass = {
+                            ...classInfo,
+                            nextDate: classDate,
+                            timeDiff: timeDiff
+                        };
+                    }
+                });
+            });
+
+            return nextClass;
+        }
+
+        function formatTimeLeft(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m ${seconds}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+
+        function updateCountdown() {
+            const nextClass = getNextClass();
+            const countdownContainer = document.getElementById('countdown-container');
+            const countdownTime = document.getElementById('countdown-time');
+            const countdownClass = document.getElementById('countdown-class');
+            
+            if (nextClass && nextClass.timeDiff <= 24 * 60 * 60 * 1000) { // Show if within 24 hours
+                const timeLeft = formatTimeLeft(nextClass.timeDiff);
+                const nextDate = nextClass.nextDate;
+                const dayName = nextDate.toLocaleDateString('en-US', { weekday: 'long' });
+                const isToday = nextDate.toDateString() === new Date().toDateString();
+                const isTomorrow = nextDate.toDateString() === new Date(Date.now() + 24 * 60 * 60 * 1000).toDateString();
+                
+                let dayText = '';
+                if (isToday) dayText = 'Today';
+                else if (isTomorrow) dayText = 'Tomorrow';
+                else dayText = dayName;
+                
+                countdownTime.textContent = timeLeft;
+                countdownClass.textContent = `${nextClass.subject} - ${dayText} at ${nextClass.startTime}`;
+                countdownContainer.classList.add('show');
+            } else {
+                countdownContainer.classList.remove('show');
+            }
         }
 
         function updateTime() {
@@ -570,6 +695,7 @@
         // Initialize and update every second
         function init() {
             updateTime();
+            updateCountdown();
             checkUrgentAlerts();
             renderTodaysClasses();
             renderWeeklySchedule();
@@ -581,6 +707,7 @@
         init();
         setInterval(() => {
             updateTime();
+            updateCountdown();
             checkUrgentAlerts();
             renderTodaysClasses();
         }, 1000);
