@@ -490,9 +490,9 @@
                 .sort((a, b) => parseTime(a.startTime) - parseTime(b.startTime))
                 .map(c => `
                     <div class="mini-class">
-                        <div class="mini-class-time">${c.startTime}</div>
-                        <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                        <div class="mini-class-time">${c.startTime} - ${c.endTime}</div>
+                        <div class="mini-class-name">${c.subject}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">Room ${c.room}</div>
                     </div>
                 `).join('') : '<div style="text-align: center; color: #999; font-style: italic; margin-top: 50px;">No classes</div>';
 
@@ -526,9 +526,9 @@
                 .sort((a, b) => parseTime(a.startTime) - parseTime(b.startTime))
                 .map(c => `
                     <div class="mini-class">
-                        <div class="mini-class-time">${c.startTime}</div>
-                        <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                        <div class="mini-class-time">${c.startTime} - ${c.endTime}</div>
+                        <div class="mini-class-name">${c.subject}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">Room ${c.room}</div>
                     </div>
                 `).join('') : '<div style="text-align: center; color: #999; font-style: italic; margin-top: 50px;">No classes</div>';
         }
