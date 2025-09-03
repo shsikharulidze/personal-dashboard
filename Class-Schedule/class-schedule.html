@@ -267,9 +267,7 @@
                 </div>
                 <div class="day-column">
                     <div class="day-header">Tuesday</div>
-                    <div id="tuesday-classes">
-                        <div style="text-align: center; color: #999; font-style: italic; margin-top: 50px;">No classes</div>
-                    </div>
+                    <div id="tuesday-classes"></div>
                 </div>
                 <div class="day-column">
                     <div class="day-header">Wednesday</div>
@@ -281,9 +279,7 @@
                 </div>
                 <div class="day-column">
                     <div class="day-header">Friday</div>
-                    <div id="friday-classes">
-                        <div style="text-align: center; color: #999; font-style: italic; margin-top: 50px;">No classes</div>
-                    </div>
+                    <div id="friday-classes"></div>
                 </div>
             </div>
         </div>
@@ -456,8 +452,6 @@
         }
 
         function renderWeeklySchedule() {
-            const days = ['Monday', 'Wednesday', 'Thursday'];
-            
             // Monday
             const mondayClasses = classes.filter(c => c.days.includes('Monday'));
             document.getElementById('monday-classes').innerHTML = mondayClasses
@@ -466,9 +460,21 @@
                     <div class="mini-class">
                         <div class="mini-class-time">${c.startTime}</div>
                         <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.instructor.split(',')[0]}</div>
+                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
                     </div>
                 `).join('');
+
+            // Tuesday
+            const tuesdayClasses = classes.filter(c => c.days.includes('Tuesday'));
+            document.getElementById('tuesday-classes').innerHTML = tuesdayClasses.length > 0 ? tuesdayClasses
+                .sort((a, b) => parseTime(a.startTime) - parseTime(b.startTime))
+                .map(c => `
+                    <div class="mini-class">
+                        <div class="mini-class-time">${c.startTime}</div>
+                        <div>Room ${c.room}</div>
+                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                    </div>
+                `).join('') : '<div style="text-align: center; color: #999; font-style: italic; margin-top: 50px;">No classes</div>';
 
             // Wednesday  
             const wednesdayClasses = classes.filter(c => c.days.includes('Wednesday'));
@@ -478,7 +484,7 @@
                     <div class="mini-class">
                         <div class="mini-class-time">${c.startTime}</div>
                         <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.instructor.split(',')[0]}</div>
+                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
                     </div>
                 `).join('');
 
@@ -490,9 +496,21 @@
                     <div class="mini-class">
                         <div class="mini-class-time">${c.startTime}</div>
                         <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.instructor.split(',')[0]}</div>
+                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
                     </div>
                 `).join('');
+
+            // Friday
+            const fridayClasses = classes.filter(c => c.days.includes('Friday'));
+            document.getElementById('friday-classes').innerHTML = fridayClasses.length > 0 ? fridayClasses
+                .sort((a, b) => parseTime(a.startTime) - parseTime(b.startTime))
+                .map(c => `
+                    <div class="mini-class">
+                        <div class="mini-class-time">${c.startTime}</div>
+                        <div>Room ${c.room}</div>
+                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                    </div>
+                `).join('') : '<div style="text-align: center; color: #999; font-style: italic; margin-top: 50px;">No classes</div>';
         }
 
         function renderAllClasses() {
