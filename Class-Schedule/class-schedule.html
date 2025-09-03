@@ -185,32 +185,50 @@
         .day-column {
             background: #f8f9ff;
             border-radius: 12px;
-            padding: 15px;
-            min-height: 300px;
+            padding: 18px;
+            min-height: 350px;
+            border: 1px solid #e8ecf4;
         }
         
         .day-header {
             text-align: center;
             font-weight: bold;
+            font-size: 1.1rem;
             color: #667eea;
-            margin-bottom: 15px;
-            padding: 10px;
+            margin-bottom: 18px;
+            padding: 12px;
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
         }
         
         .mini-class {
             background: #667eea;
             color: white;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+            transition: transform 0.2s ease;
+        }
+        
+        .mini-class:hover {
+            transform: translateY(-1px);
         }
         
         .mini-class-time {
             font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .mini-class-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: #f0f8ff;
         }
         
         .no-classes {
@@ -459,8 +477,8 @@
                 .map(c => `
                     <div class="mini-class">
                         <div class="mini-class-time">${c.startTime}</div>
-                        <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                        <div class="mini-class-name">${c.subject}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">Room ${c.room}</div>
                     </div>
                 `).join('');
 
@@ -483,8 +501,8 @@
                 .map(c => `
                     <div class="mini-class">
                         <div class="mini-class-time">${c.startTime}</div>
-                        <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                        <div class="mini-class-name">${c.subject}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">Room ${c.room}</div>
                     </div>
                 `).join('');
 
@@ -495,8 +513,8 @@
                 .map(c => `
                     <div class="mini-class">
                         <div class="mini-class-time">${c.startTime}</div>
-                        <div>Room ${c.room}</div>
-                        <div style="font-size: 0.8rem; margin-top: 3px;">${c.subject}</div>
+                        <div class="mini-class-name">${c.subject}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.9;">Room ${c.room}</div>
                     </div>
                 `).join('');
 
